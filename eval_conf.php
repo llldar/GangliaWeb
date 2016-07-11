@@ -5,7 +5,9 @@
 #
 
 $base_dir = dirname(__FILE__);
+    #给出一个包含有指向一个文件的全路径的字符串，dirname函数返回去掉文件名后的目录名。
 set_include_path( "$base_dir/lib:" . ini_get( 'include_path' ) );
+    #设置初始值
 
 # Load main config file.
 require_once $base_dir . "/conf_default.php";
