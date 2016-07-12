@@ -1,5 +1,5 @@
 <?php
-
+#本文件是php的dwoo库文件，用于加载对应模板
 include dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Dwoo'. DIRECTORY_SEPARATOR . 'Core.php';
 
 function dwooAutoload($class)
