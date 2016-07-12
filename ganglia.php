@@ -7,6 +7,10 @@
 # sacerdoti: These are now context-sensitive, and hold only as much
 # information as we need to make the page.
 #
+# ganglia.php 主要用于解析 XML 文件语法树
+# 该文件 第一部分定义的数组用于保存 XML 信息
+# 目前这些代码是上下文有关的，而且仅仅保存我们绘制页面所需的那部分信息
+# 主题思想就是通过网络从gmetad里面获取规则的XML数据并解析
 
 $gweb_root = dirname(__FILE__);
 
@@ -17,7 +21,10 @@ $error="";
 
 # Gives time in seconds to retrieve and parse XML tree. With subtree-
 # capable gmetad, should be very fast in all but the largest cluster configurations.
+# 计算解析XML树时间，应该会很快
 $parsetime = 0;
+
+# 以下为数据内容及键值
 
 # 2key = "Source Name" / "NAME | AUTHORITY | HOSTS_UP ..." = Value.
 $grid = array();
@@ -31,15 +38,18 @@ $hosts_up = array();
 $hosts_down = array();
 
 # Context dependant structure.
+# 上下文有关的结构
 $metrics = array();
 
 # 1Key = "Component" (gmetad | gmond) = Version string
 $version = array();
 
 # The web frontend version, from conf.php.
+# 从conf.php中获得的 Web前端的版本信息
 $version["webfrontend"] = $GLOBALS["ganglia_version"];
 
 # Get rrdtool version
+# 获取 rrdtool 的版本信息
 $rrdtool_version = array();
 exec($conf['rrdtool'], $rrdtool_version);
 $rrdtool_version = explode(" ", $rrdtool_version[0]);
@@ -47,11 +57,13 @@ $rrdtool_version = $rrdtool_version[1];
 $version["rrdtool"] = "$rrdtool_version";
  
 # The name of our local grid.
+# 本地gird的名称
 $self = " ";
 
 $index_array = array();
 
 # Returns true if the host is alive. Works for both old and new gmond sources.
+# 判断该主机是否还正在工作
 function host_alive($host, $cluster)
 {
    $TTL = 60;
@@ -70,6 +82,7 @@ function host_alive($host, $cluster)
 
 
 # Called with <GANGLIA_XML> attributes.
+# 使用<GANGLIA_XML>属性 来调用
 function preamble($ganglia)
 {
    global $version;
@@ -78,7 +91,7 @@ function preamble($ganglia)
    $version[$component] = $ganglia['VERSION'];
 }
 
-
+# 开启数据收集
 function start_meta ($parser, $tagname, $attrs)
 {
    global $metrics, $grid, $self, $debug;
@@ -96,12 +109,14 @@ function start_meta ($parser, $tagname, $attrs)
          case "CLUSTER":
             if ($debug) print "<br/>DEBUG: parser start meta GRID|CLUSTER\n";
             # Our grid will be first.
+
             if (!$sourcename) $self = $attrs['NAME'];
 
             $sourcename = $attrs['NAME'];
             $grid[$sourcename] = $attrs;
 
             # Identify a grid from a cluster.
+            # 区分grid 和 cluster
             $grid[$sourcename][$tagname] = 1;
             break;
 
@@ -120,7 +135,7 @@ function start_meta ($parser, $tagname, $attrs)
       }
 }
 
-
+# 开始绘制集群
 function start_cluster ($parser, $tagname, $attrs)
 {
    global $metrics, $cluster, $self, $grid, $hosts_up, $hosts_down, $debug;
@@ -187,6 +202,7 @@ function start_cluster ($parser, $tagname, $attrs)
 
 }
 
+# 开始其他的东西
 function start_everything ($parser, $tagname, $attrs)
 {
    global $index_array, $hosts, $metrics, $cluster, $self, $grid, $hosts_up, $hosts_down, $debug;
@@ -327,6 +343,7 @@ function Gmetad ()
    if ($debug) print "<br/>\n";
    # Parameters are optionalshow
    # Defaults...
+   # 这些信息参数是可选的(非必需)
    $ip = $conf['ganglia_ip'];
    $port = $conf['ganglia_port'];
    $timeout = 3.0;
@@ -390,6 +407,7 @@ function Gmetad ()
    if ($port == 8649)
       {
          # We are connecting to a gmond. Non-interactive.
+         # 非交互式地连接到gmond 
          xml_set_element_handler($parser, "start_cluster", "end_all");
       }
    else
