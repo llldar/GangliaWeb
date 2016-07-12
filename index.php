@@ -35,7 +35,7 @@ catch (Exception $e)
       exit;
    }
 
-# Useful for addons.插件
+# Useful for addons.对插件有用
 $GHOME = ".";
 
 if ($context == "meta" or $context == "control") {

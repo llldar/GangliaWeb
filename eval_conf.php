@@ -2,6 +2,7 @@
 # $Id$
 #
 # read and evaluate the configuration file
+#读取和评估配置文件
 #
 
 $base_dir = dirname(__FILE__);
@@ -9,12 +10,13 @@ $base_dir = dirname(__FILE__);
 set_include_path( "$base_dir/lib:" . ini_get( 'include_path' ) );
     #设置初始值
 
-# Load main config file.
+# Load main config file.加载主配置文件
 require_once $base_dir . "/conf_default.php";
 require_once 'lib/GangliaAcl.php';
 require_once 'lib/GangliaAuth.php';
 
-# Include user-defined overrides if they exist.
+    # Include user-defined overrides if they exist.如果存在用户定义的覆盖，就包括他们。
+
 if( file_exists( $base_dir . "/conf.php" ) ) {
   include_once $base_dir . "/conf.php";
 }
@@ -60,7 +62,7 @@ if ($conf['overlay_events']) {
   }
 }
 
-// Installation validity checks
+// Installation validity checks检查安装的有效性
 if ( ! isset($conf['rrds']) ||  ! is_readable($conf['rrds']) ) {
   $errors[] = "RRDs directory '${conf['rrds']}' is not readable.<br/>".
   "Please adjust <code>\$conf['rrds']</code>."; 
@@ -122,6 +124,7 @@ if( count($errors) ) {
   // Make sure that errors are actually displayed, whether or not the local
   // PHP configuration is set to display them, otherwise it looks as though
   // a blank page is being served.
+//    不管本地PHP配置是否设置了显示错误，请确保错误会被显示出来，否则它看起来就像一个空白的即将被送走的网页
   ini_set('display_errors', 1);
   error_reporting(E_ALL);
 
@@ -131,6 +134,7 @@ if( count($errors) ) {
 # These are settings derived from the configuration settings, and
 # should not be modified.  This file will be overwritten on package upgrades,
 # while changes made in conf.php should be preserved
+    #这些设置属于配置设置， 不应该被修改， 这些文件会被升级包覆盖， 当conf.php被修改时， 这些文件应该保存下来
 $rrd_options = "";
 if( isset( $conf['rrdcached_socket'] ) )
 {
