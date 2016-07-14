@@ -1,5 +1,8 @@
 /* The Ganglia Web-frontend Cascading Style Sheet. */
-
+/* 这是Ganglia Web页面所用的CSS 文件
+ * 没有多少研究的意义，只是让页面变得更加好看
+ * 指定字体 颜色 间距等
+ */
 body{ font: 75% "Trebuchet MS", sans-serif; margin: 5px;}
 
 A:link

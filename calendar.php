@@ -3,7 +3,7 @@
 # LGPL javascript calendar is optional, but very nice.
 # Snag it from http://www.dynarch.com/demos/jscalendar/
 # and install in jscalendar-1.0/ inside this web dir.
-
+# 在PHP 中包裹了javascript 代码来使用jquery 自带的calender进行日历绘制
 $calendar_head = '
 <script type="text/javascript">
 function ganglia_submit(clearonly) {
@@ -15,6 +15,7 @@ function ganglia_submit(clearonly) {
 </script>
 ';
 
+# 如果读不了文件则不生成日历
 if ( ! is_readable('./jscalendar-1.0/calendar.js') ) {
 
   $calendar = '';
