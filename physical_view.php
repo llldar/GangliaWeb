@@ -12,6 +12,13 @@
 # ($metrics, $clusters, $hosts) are set, and header.php
 # already called.
 
+# 使用物理显示模式来显示集群信息
+# 这个显示模式下 节点由它的 Rack, Rank, Plane 三个集群中的物理位置属性来决定
+# 
+# 由 index.php 调用 所以 集群、XML树变量 都已经设置好了
+# header.php 也已经调用过了
+
+# 使用dwoo 来创建一个模板
 $tpl = new Dwoo_Template_File( template("physical_view.tpl") );
 $data = new Dwoo_Data();
 $data->assign("cluster",$clustername);
@@ -21,6 +28,7 @@ $data->assign("cluster_url",$cluster_url);
 $verbosity_levels = array('3' => "", '2' => "", '1' => "");
 
 # Assign the verbosity level. Can take the value of the 'p' CGI variable.
+# 确定一下verbosity 级别
 $verbose = $physical ? $physical : 2;
 
 $verbosity_levels[$verbose] = "checked";
@@ -28,9 +36,12 @@ $data->assign("verbosity_levels", $verbosity_levels);
 
 #
 # Give the capacities of this cluster: total #CPUs, Memory, Disk, etc.
-#
+# 指定集群的特定参数的容量 如 CPU 内存 硬盘 等等
+
 $CPUs = cluster_sum("cpu_num", $metrics);
 # Divide by 1024^2 to get Memory in GB.
+# 获取由GB显示的容量
+
 $Memory = sprintf("%.1f GB", cluster_sum("mem_total", $metrics)/(float)1048576);
 $Disk = cluster_sum("disk_total", $metrics);
 $Disk = $Disk ? sprintf("%.1f GB", $Disk) : "Unknown"; 
@@ -40,6 +51,7 @@ $data->assign("Memory", $Memory);
 $data->assign("Disk", $Disk);
 
 # Show which node has the most full disk.
+# 显示出哪个节点有最满的磁盘
 $most_full_hosturl=rawurlencode($most_full_host);
 $most_full = $most_full ? "<a href=\"./?p=1&amp;c=$cluster_url&amp;h=$most_full_host\">".
    "$most_full_host ($most_full% Used)</a>" : "Unknown";
@@ -49,6 +61,7 @@ $data->assign("cols_menu", $cols_menu);
 #------------------------------------------------------------------------------
 # Organize hosts by rack locations.
 # Works with or without "location" host attributes.
+# 按rack 位置来组织主机
 function physical_racks()
 {
    global $hosts_up, $hosts_down;
@@ -62,6 +75,7 @@ function physical_racks()
    if (is_array($hosts_up)) {
       foreach ($hosts_up as $host=>$v) {
          # Try to find the node's location in the cluster.
+         # 寻找节点在集群中的位置
          list($rack, $rank, $plane) = findlocation($v);
 
          if ($rack>=0 and $rank>=0 and $plane>=0 and !array_key_exists($rank, $racks[$rack])) {
@@ -95,6 +109,7 @@ function physical_racks()
    }
 
    # Sort the racks array.
+   # 对racks 数组进行排序
    if ($unknownID<-1) { krsort($racks); }
    else {
       ksort($racks);
@@ -113,6 +128,10 @@ function physical_racks()
 # Generates the colored Node cell HTML. Used in Physical
 # view and others. Intended to be used to build a table, output
 # begins with "<tr><td>" and ends the same.
+# 生成一个
+#
+#
+#
 function nodebox($hostname, $verbose, $title="", $extrarow="")
 {
    global $cluster, $clustername, $metrics, $hosts_up, $GHOME;

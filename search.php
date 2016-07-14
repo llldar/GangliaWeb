@@ -3,15 +3,18 @@ $( "#tabs" ).bind( "tabsshow", function(event, ui) {
     jQuery('#jquery-live-search').slideUp(0);
   });
 </script>
-<?php
 
+<?php
+// 上面为jquery 代码，把搜索页面和对应tab绑定
 require_once('./eval_conf.php');
 require_once('./functions.php');
 
 // Load the metric caching code
 //$debug = 1;
+// 加载参数缓存
 retrieve_metrics_cache();
 
+# 判断是否为移动版页面
 if ( isset($_GET['mobile']))
   $mobile = 1;
 else
@@ -20,9 +23,11 @@ else
 $results = "";
 
 if ( isset($_GET['q']) && $_GET['q'] != "" ) {
+  //如果用户进行了查询的话
 
   $query = $_GET['q'];
   // First we look for the hosts
+  // 首先在 主机里面寻找
   foreach ( $index_array['hosts'] as $key => $host_name ) {
     if ( preg_match("/$query/i", $host_name ) ) {
       $clusters = $index_array['cluster'][$host_name];
@@ -36,6 +41,7 @@ if ( isset($_GET['q']) && $_GET['q'] != "" ) {
   }
 
   // Now let's look through metrics.
+  // 然后在参数里面去找
   foreach ( $index_array['metrics'] as $metric_name => $hosts ) {
     if ( preg_match("/$query/i", $metric_name ) ) {
       foreach ( $hosts as $key => $host_name ) {
@@ -50,7 +56,7 @@ if ( isset($_GET['q']) && $_GET['q'] != "" ) {
       }
     }
   }
-
+  //找不到的处理
 } else {
   $results .= "Empty query string";
 }
