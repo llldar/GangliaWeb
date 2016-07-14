@@ -219,7 +219,7 @@ if ($context == "cluster") {
 extract( $user );
 
 # A hack for pre-2.5.0 ganglia data sources.
-# 一个pre-2.5.0节数据源的特殊手法
+    一个pre-2.5.0节数据源的入侵
 $always_constant = array(
    "swap_total" => 1,
    "cpu_speed" => 1,
