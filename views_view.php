@@ -3,6 +3,11 @@ include_once("./eval_conf.php");
 include_once("./functions.php");
 include_once("./global.php");
 
+    #创建或删除一个视图
+    #往视图里添加东西
+    #get和set各种数据
+    #把数据转换为json格式
+    #没有可用视图时发出警告（暂时停用，否则无法创建新的视图）
 if (! checkAccess(GangliaAcl::ALL_VIEWS, GangliaAcl::VIEW, $conf))
   die("You do not have access to view views.");
 
@@ -21,7 +26,7 @@ if (isset($_GET['vn']) && !is_proper_view_name($_GET['vn'])) {
 } else {
   $view_name = $_GET['vn'];
 }
-
+    #查看文件名
 function viewFileName($view_name) {
   global $conf;
 
@@ -118,6 +123,7 @@ if (isset($_GET['add_to_view'])) {
       $view = $viewList->getView($view_name);
 
       # Check if we are adding an aggregate graph
+        #检查是否在添加一个人合并图
       if (isset($_GET['aggregate'])) {
 	foreach ($_GET['mreg'] as $key => $value) 
 	  $metric_regex_array[] = array("regex" => $value);
@@ -249,7 +255,7 @@ class ViewTreeNode {
     }
     return $parent;
   }
-
+    #get和set各种数据
   public function getData() {
     return $this->data;
   }
@@ -269,7 +275,7 @@ class ViewTreeNode {
   public function setParent($parent) {
     $this->parent = $parent;
   }
-
+    #转换为Json格式
   public function toJson($initially_open) {
     $pathName = $this->getPathName();
     $id = viewId($pathName);
@@ -308,7 +314,7 @@ class ViewTreeNode {
     return $pathName;
   }
 }
-
+    #建一个新的视图数
 function build_view_tree($views) {
   $view_tree = new ViewTreeNode('root');
   foreach ($views as $view) {
@@ -376,6 +382,8 @@ if (isset($conf['ad-hoc-views']) &&
 
 // Pop up a warning message if there are no available views
 // (Disable temporarily, otherwise we can't create views)
+//    如果没有可用视图，发出一个警告信息
+//     暂时停用，否则我们将无法创建视图
 if (count($viewList->getViews()) == -1 && !$is_ad_hoc) {
   $error_msg = '
     <div class="ui-widget">
@@ -390,7 +398,8 @@ if (count($viewList->getViews()) == -1 && !$is_ad_hoc) {
 $size = isset($clustergraphsize) ? $clustergraphsize : 'default';
 
 // set to 'default' to preserve old behavior
-if ($size == 'medium') 
+//    给集群设置默认以保护之前的动作
+if ($size == 'medium')
   $size = 'default';
 
 $additional_host_img_css_classes = "";

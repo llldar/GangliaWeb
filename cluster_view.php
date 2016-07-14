@@ -10,7 +10,16 @@ include_once "./get_context.php";
 include_once "./ganglia.php";
 include_once "./get_ganglia.php";
 include_once "./dwoo/dwooAutoload.php";
-
+    // ********总结*********
+    // 如果使用rrdTool，reports可以是json或php后缀。
+    // 加载各种东西
+    // 显示加载的图标
+    // 主机的指标图，对指标进行判断和处理
+    // 集群的可选的数据报告#加载热图
+    // 开始主句播放控制器
+    // 结束主机播放控制器
+    // 创建一个热图
+    // 显示堆栈图像
 if ($refresh) {
   try {
     $dwoo = new Dwoo($conf['dwoo_compiled_dir'], $conf['dwoo_cache_dir']);
@@ -21,7 +30,7 @@ if ($refresh) {
     exit;
   }
 }
-
+//指标选择器
 function get_picker_metrics($metrics, $reports, $gweb_root, $graph_engine) {
   $context_metrics = "";
   if (count($metrics)) {
@@ -42,6 +51,7 @@ function get_picker_metrics($metrics, $reports, $gweb_root, $graph_engine) {
   // Find all the optional reports
   if ($handle = opendir($gweb_root . '/graph.d')) {
     // If we are using RRDtool reports can be json or PHP suffixes
+//      如果使用rrdTool，reports可以是json或php后缀。
     if ( $graph_engine == "rrdtool" )
       $report_suffix = "php|json";
     else
@@ -66,7 +76,7 @@ function get_picker_metrics($metrics, $reports, $gweb_root, $graph_engine) {
   }
   return $picker_metrics;
 }
-
+//加载
 function get_load($host, $metrics) {
   if (isset($metrics[$host]["cpu_num"]['VAL']) and 
       $metrics[$host]["cpu_num"]['VAL'] != 0 ) {
@@ -83,8 +93,8 @@ function get_load($host, $metrics) {
   $load = ((float) $load_one) / $cpus;
   return $load;
 }
-
-function get_load_pie($showhosts, 
+//加载各种东西
+function get_load_pie($showhosts,
 		      $hosts_up, 
 		      $hosts_down, 
 		      $user, 
@@ -120,6 +130,7 @@ function get_load_pie($showhosts,
     }
 
     // Show pie chart of loads
+//      显示加载的图标
     $pie_args = "title=" . rawurlencode("Cluster Load Percentages");
     $pie_args .= "&amp;size=250x150";
     foreach ($conf['load_colors'] as $name => $color) {
@@ -141,7 +152,7 @@ function get_load_pie($showhosts,
     $data->assign("pie_args", $pie_args);
   }
 }
-
+//主机的指标图，对指标进行判断和处理
 function get_host_metric_graphs($showhosts,
 				$hosts_up, 
                                 $hosts_down, 
@@ -426,6 +437,7 @@ function get_cluster_overview($showhosts,
   $data->assign("range", $range);
 }
 
+#集群的可选的数据报告
 function get_cluster_optional_reports($conf, 
                                       $clustername, 
                                       $get_metric_string,
@@ -449,6 +461,9 @@ function get_cluster_optional_reports($conf,
 # Let's find out what optional reports are included
 # First we find out what the default (site-wide) reports are then look
 # for host specific included or excluded reports
+# 知道哪些包含可选报告
+# 首先得知道默认的报告是什么，
+# 然后寻找主机特定包含和排除的报告
 ###############################################################################
   $default_reports = array("included_reports" => array(), 
 			   "excluded_reports" => array());
@@ -505,7 +520,7 @@ function get_cluster_optional_reports($conf,
  }
  $data->assign('optional_graphs_data', $optional_graphs_data);
 }
-
+#加载热图
 function get_load_heatmap($hosts_up, $host_regex, $metrics, $data, $sort) {
   foreach ($hosts_up as $host => $val) {
     // If host_regex is defined
@@ -625,6 +640,7 @@ if (! $refresh) {
   
   //////////////////////////////////////////////////////////////////////////////
   // Begin Host Display Controller
+  // 打开主机显示控制器
   //////////////////////////////////////////////////////////////////////////////
   
   // Correctly handle *_report cases and blank (" ") units
@@ -664,6 +680,9 @@ if (! $refresh) {
   // for a long time. For those cases we have the ability to display
   // only the max amount of graphs and put place holders for the rest ie.
   // it will say only print host name without an image
+  // 有时集群有很多主机需要加载，这需要一段很长的时间，在那种情况下，
+  // 我们只能播放最大数量的图形，并且把空间给其他的ie
+  // 这就说明我们只能打印一个没图像的主机名
   $max_graphs_options = array(1000,500,200,100,50,25,20,15,10);
 
   if (isset($user['max_graphs']) && is_numeric($user['max_graphs']))
@@ -695,6 +714,7 @@ if (! $refresh) {
 
   //////////////////////////////////////////////////////////////////////////////
   // End Host Display Controller
+  // 结束主机播放控制器
   //////////////////////////////////////////////////////////////////////////////
  }
 
@@ -735,6 +755,7 @@ if ($showhosts != 0)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Creates a heatmap
+// 创建一个热图
 ///////////////////////////////////////////////////////////////////////////////
 if (isset($conf['heatmaps_enabled']) and 
     $conf['heatmaps_enabled'] == 1 and
@@ -752,6 +773,7 @@ if (!is_array($hosts_up) or !$showhosts) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Show stacked graphs
+// 显示堆栈图像
 ///////////////////////////////////////////////////////////////////////////////
 if (isset($conf['show_stacked_graphs']) and 
     $conf['show_stacked_graphs'] == 1  and 
