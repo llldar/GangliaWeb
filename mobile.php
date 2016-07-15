@@ -8,6 +8,8 @@ retrieve_metrics_cache();
 /////////////////////////////////////////////////////////////////////////////
 // With Mobile view we are gonna utilize the capability of putting in
 // multiple pages in the same payload so that we avoid HTTP round trips
+// 本文件主要用于优化移动端页面的显示，即移动版的'index.php+view_view.php+search.php'
+// 把多个页面放入一个传送包中以避免大量的http传送请求
 /////////////////////////////////////////////////////////////////////////////
 ?>
 <!DOCTYPE html> 
@@ -31,6 +33,7 @@ dt code, dd code { font-size:1.3em; line-height:150%; }
 <body> 
 <?php
   //  Build cluster array. So we know if there is more than 1
+  // 构建cluster 数组，这样我们就知道了是否有多于一个的cluster 数组
   foreach ( $index_array['cluster'] AS $hostname => $clusters ) {
     foreach ($clusters AS $clustername) {
       $cluster_array[$clustername][] = $hostname;
@@ -74,6 +77,7 @@ if ( count($cluster_names) > 1 ) {
     <ul data-role="listview" data-theme="g">
       <?php
       // List all clusters
+      // 所有 集群 的列表
       foreach ( $cluster_names as $index => $clustername ) {
 	print '<li><a href="#cluster-' . str_replace(" ", "_", $clustername) . '">' . $clustername . '</a><span class="ui-li-count">' .  count($cluster_array[$clustername]) . '</span></li>';  
       }
@@ -86,6 +90,7 @@ if ( count($cluster_names) > 1 ) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Create a sub-page for every cluster
+// 为每个集群创建一个子页面
 ///////////////////////////////////////////////////////////////////////////////
 foreach ( $cluster_names as $index => $clustername ) {
 ?>
@@ -98,6 +103,7 @@ foreach ( $cluster_names as $index => $clustername ) {
 	<?php
 	  print '<li><a href="mobile_helper.php?show_cluster_metrics=1&c=' . $clustername . '&r=' . $conf['default_time_range'] . '&cs=&ce=">Cluster Summary</a></li>';  
 	// List all hosts in the cluster
+  // 列出一个集群中的所有主机
 	asort($cluster_array[$clustername]);
 	foreach ( $cluster_array[$clustername] as $index => $hostname ) {
 	  print '<li><a href="mobile_helper.php?show_host_metrics=1&h=' . $hostname . '&c=' . $clustername . '&r=' . $conf['default_time_range'] . '&cs=&ce=">';
@@ -116,6 +122,7 @@ foreach ( $cluster_names as $index => $clustername ) {
 }
 ///////////////////////////////////////////////////////////////////////////////
 // Views
+// 视图部分
 ///////////////////////////////////////////////////////////////////////////////
 ?>
 <div data-role="page" class="ganglia-mobile" id="views">
@@ -126,6 +133,7 @@ foreach ( $cluster_names as $index => $clustername ) {
     <ul data-role="listview" data-filter="true" data-theme="g">
       <?php  
       // List all the available views
+      // 列出所有可选的视图
       foreach ( $available_views as $view_id => $view ) {
 	$v = $view['view_name'];
 	print '<li><a href="mobile_helper.php?view_name=' . $v . '&r=' . $conf['default_time_range'] . '&cs=&ce=">' . $v . '</a></li>';  
@@ -137,6 +145,7 @@ foreach ( $cluster_names as $index => $clustername ) {
 <?php
 ///////////////////////////////////////////////////////////////////////////////
 // Search
+// 搜索部分
 ///////////////////////////////////////////////////////////////////////////////
 ?>
 <script>

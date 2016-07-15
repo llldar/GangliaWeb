@@ -8,6 +8,7 @@ include_once "./get_ganglia.php";
 <?php
 ///////////////////////////////////////////////////////////////////////////////
 // Generating mobile view
+// 生成移动端适配的视图
 ///////////////////////////////////////////////////////////////////////////////
 if ( isset($_GET['view_name'])) {
 ?>  
@@ -25,6 +26,7 @@ if ( isset($_GET['view_name'])) {
   
   // Header bar support up to 5 items. 5+ items will be shown in multiple
   // rows. Thus we'll limit to first 5 time ranges
+  // 顶部栏最多支持5个元素，超过的部分就分列显示
   $my_ranges = array_keys( $conf['time_ranges'] );     
   for ( $i = 0 ; $i < 5 ; $i++ ) {
      $context_ranges[] = $my_ranges[$i]; 
@@ -53,6 +55,7 @@ if ( isset($_GET['view_name'])) {
   <?php
 
     // Let's find the view definition
+    // 找到视图的定义
     foreach ( $available_views as $view_id => $view ) {
   
      if ( $view['view_name'] == $view_name ) {
@@ -86,6 +89,7 @@ if ( isset($_GET['view_name'])) {
 } // end of if ( isset($_GET['view_name']))
 ///////////////////////////////////////////////////////////////////////////////
 // Generate cluster summary view
+// 生成集群的总视图
 ///////////////////////////////////////////////////////////////////////////////
 if ( isset($_GET['show_cluster_metrics'])) {
   $clustername = $_GET['c'];
@@ -100,6 +104,7 @@ if ( isset($_GET['show_cluster_metrics'])) {
   <?php
 	// Header bar support up to 5 items. 5+ items will be shown in multiple
 	// rows. Thus we'll limit to first 5 time ranges
+  // 把一行中能看到的部件限制为5个，超出的分行显示
 	$my_ranges = array_keys( $conf['time_ranges'] );     
 	for ( $i = 0 ; $i < 5 ; $i++ ) {
 	   $context_ranges[] = $my_ranges[$i]; 
@@ -131,6 +136,7 @@ if ( isset($_GET['show_cluster_metrics'])) {
     // Let's find out what optional reports are included
     // First we find out what the default (site-wide) reports are then look
     // for host specific included or excluded reports
+    // 找到所有的可选的报告信息，顺序为 全站点默认、单主机特定包含、排除的报告信息
     ///////////////////////////////////////////////////////////////////////////
     $default_reports = array("included_reports" => array(), "excluded_reports" => array());
     if ( is_file($conf['conf_dir'] . "/default.json") ) {
@@ -171,6 +177,7 @@ if ( isset($_GET['show_cluster_metrics'])) {
 }
 ///////////////////////////////////////////////////////////////////////////////
 // Generate host view
+// 生成主机视图
 ///////////////////////////////////////////////////////////////////////////////
 if ( isset($_GET['show_host_metrics'])) {
   $hostname = $_GET['h'];
@@ -186,6 +193,7 @@ if ( isset($_GET['show_host_metrics'])) {
   <?php
 	// Header bar support up to 5 items. 5+ items will be shown in multiple
 	// rows. Thus we'll limit to first 5 time ranges
+  // 一样，超过5个元素则分行显示
 	$my_ranges = array_keys( $conf['time_ranges'] );     
 	for ( $i = 0 ; $i < 5 ; $i++ ) {
 	   $context_ranges[] = $my_ranges[$i]; 
@@ -217,6 +225,7 @@ if ( isset($_GET['show_host_metrics'])) {
     // Let's find out what optional reports are included
     // First we find out what the default (site-wide) reports are then look
     // for host specific included or excluded reports
+    // 一样，进行报告
     ///////////////////////////////////////////////////////////////////////////
     $default_reports = array("included_reports" => array(), "excluded_reports" => array());
     if ( is_file($conf['conf_dir'] . "/default.json") ) {
@@ -233,10 +242,12 @@ if ( isset($_GET['show_host_metrics'])) {
     }
     
     # Merge arrays
+    # 合并数组
     $reports["included_reports"] = array_merge( $default_reports["included_reports"] , $override_reports["included_reports"]);
     $reports["excluded_reports"] = array_merge($default_reports["excluded_reports"] , $override_reports["excluded_reports"]);
     
     # Remove duplicates
+    # 去重
     $reports["included_reports"] = array_unique($reports["included_reports"]);
     $reports["excluded_reports"] = array_unique($reports["excluded_reports"]);
     
@@ -274,6 +285,7 @@ foreach ($metrics as $metric_name => $metric_attributes) {
     if ($ce)
        $metric_graphargs .= "&amp;ce=" . rawurlencode($ce);
     # Adding units to graph 2003 by Jason Smith <smithj4@bnl.gov>.
+    # 给图像中加入元素
     if ($metric_attributes['UNITS']) {
        $encodeUnits = rawurlencode($metric_attributes['UNITS']);
        $metric_graphargs .= "&amp;vl=$encodeUnits";
@@ -291,6 +303,7 @@ foreach ($metrics as $metric_name => $metric_attributes) {
       $group_name = $metrics[$metric_name]['GROUP'][0];
 
     // Make an array of groups
+    // 为群组生成数组
     if ( ! in_array($group_name, $groups) ) {
       $groups[] = $group_name;
     }
