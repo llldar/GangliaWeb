@@ -8,6 +8,10 @@
 # looks. In the future, it may display process information for
 # the node as well.
 #
+# 本文件主要用于显示某个特定的主机的详细信息
+# 重复了不少host_view 的内容
+# 使用了CSS渲染使其视觉效果更佳
+# 
 # Originally by Federico Sacerdoti <fds@sdsc.edu>
 #
 # Host is specified in get_context.php.
@@ -28,7 +32,7 @@ $data->assign("class",$class);
 $data->assign("name", $hostname);
 
 # $metrics is an array of [Metrics][Hostname][NAME|VAL|TYPE|UNITS|SOURCE].
-
+# 从集群中寻找到其物理位置
 # Find the host's physical location in the cluster.
 $hostattrs = ($up) ? $hosts_up : $hosts_down;
 list($rack,$rank,$plane) = findlocation($hostattrs);
@@ -41,6 +45,7 @@ if(isset($hostattrs['ip'])) {
 	$data->assign("ip", "");
 }
 
+# 加载我们这个主机节点所需要的参数
 # The metrics we need for this node.
 $mem_total_gb = $metrics['mem_total']['VAL']/1048576;
 $load_one=$metrics['load_one']['VAL'];
@@ -51,6 +56,7 @@ $cpu_system=$metrics['cpu_system']['VAL'];
 $cpu_idle=$metrics['cpu_idle']['VAL'];
 $cpu_num=$metrics['cpu_num']['VAL'];
 # Cannot be zero, since we use it as a divisor.
+# 不可以为0 因为要做除法
 if (!$cpu_num) { $cpu_num=1; }
 $cpu_speed=round($metrics['cpu_speed']['VAL']/1000, 2);
 $disk_total=$metrics['disk_total']['VAL'];
@@ -63,6 +69,7 @@ $disk = ($disk_total) ? "Using $disk_use of $disk_total $disk_units" : "Unknown"
 $part_max = ($part_max_used) ? "$part_max_used% used." : "Unknown";
 
 # Compute time of last heartbeat from node's dendrite.
+# 进行
 $clustertime=$cluster['LOCALTIME'];
 $data->assign("clustertime", strftime("%c", $clustertime));
 $heartbeat=$hostattrs['REPORTED'];
@@ -75,6 +82,7 @@ if ($age > 3600) {
 }
 
 # The these hardware units should be more flexible.
+# 
 $s = ($cpu_num>1) ? "s" : "";
 $data->assign("s",$s);
 $data->assign("cpu", sprintf("%s x %.2f GHz", $cpu_num, $cpu_speed));
@@ -89,17 +97,21 @@ $data->assign("cpu_system",$cpu_system);
 $data->assign("cpu_idle",$cpu_idle);
 
 # Choose a load color from a unix load value.
+# 选择一个加载颜色
 function loadindex($load) {
    global $cpu_num;
    # Highest color comes at a load of loadscalar*10.
+   # 最亮的颜色加载为最高的级别
    $loadscalar=0.2;
    $level=intval($load/($loadscalar*$cpu_num))+1;
    # Trim level to a max of 10.
+   # 级别最高限制为10
    $level = $level > 10 ? "L10" : "L$level";
    return $level;
 }
 
 # Choose a load color from a 0-100 percentage.
+# 选择0-100间 的加载颜色
 function percentindex($val) {
    $level = intval($val/10 + 1);
    $level = $level>10 ? "L10" : "L$level";
@@ -114,6 +126,7 @@ $data->assign("sys",percentindex($cpu_system));
 $data->assign("idle",percentindex(100 - $cpu_idle));
 
 # Software metrics
+# 软件信息
 $os_name=$metrics['os_name']['VAL'];
 $os_release=$metrics['os_release']['VAL'];
 $machine_type=$metrics['machine_type']['VAL'];
@@ -122,6 +135,7 @@ $booted=date("F j, Y, g:i a", $boottime);
 $uptime=uptime($cluster['LOCALTIME'] - $metrics['boottime']['VAL']);
 
 # Turning into MBs. A MB is 1024 bytes.
+# 空间信息转换成MB
 $swap_free=$metrics['swap_free']['VAL']/1024.0;
 $swap_total=sprintf("%.1f", $metrics['swap_total']['VAL']/1024.0);
 $swap_used=sprintf("%.1f", $swap_total - $swap_free);
@@ -132,13 +146,16 @@ $data->assign("uptime", $up ? $uptime : "[down]");
 $data->assign("swap","Using $swap_used of $swap_total MB swap.");
 
 # For the back link.
+# 进行向后的连接
 $cluster_url=rawurlencode($clustername);
 $data->assign("physical_view","./?p=$physical&amp;c=$cluster_url");
 
 # For the full host view link.
+# 完整主机信息的链接
 $data->assign("full_host_view","./?c=$cluster_url&amp;h=$hostname&amp;$get_metric_string");
 
 # For the reload link.
+# 重新加载用的链接
 $data->assign("self","./?c=$cluster_url&amp;h=$hostname&amp;p=$physical");
 
 $dwoo->output($tpl, $data);

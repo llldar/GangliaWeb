@@ -5,6 +5,9 @@ $( "#tabs" ).bind( "tabsshow", function(event, ui) {
 </script>
 
 <?php
+/*
+  本文件主要的功能是实现对 节点 参数的搜索，即在顶部点击serach 之后的搜索的功能的实现
+*/
 // 上面为jquery 代码，把搜索页面和对应tab绑定
 require_once('./eval_conf.php');
 require_once('./functions.php');

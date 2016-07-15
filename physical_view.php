@@ -12,7 +12,7 @@
 # ($metrics, $clusters, $hosts) are set, and header.php
 # already called.
 
-# 使用物理显示模式来显示集群信息
+# 本文件使用物理信息显示模式来显示集群信息
 # 这个显示模式下 节点由它的 Rack, Rank, Plane 三个集群中的物理位置属性来决定
 # 
 # 由 index.php 调用 所以 集群、XML树变量 都已经设置好了
