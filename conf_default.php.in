@@ -7,6 +7,7 @@
 ##########################################################################
 #
 # Gmetad-webfrontend version. Used to check for updates.
+#Gweb之前的版本，用于检查升级
 #
 $conf['gweb_root'] = dirname(__FILE__);
 $conf['gweb_confdir'] = "@vargwebstatedir@";
@@ -15,65 +16,86 @@ include_once $conf['gweb_root'] . "/version.php";
 
 #
 # 'readonly': No authentication is required.  All users may view all resources.  No edits are allowed.
-#  'enabled': Guest users may view public clusters.  Login is required to make changes.  
+#  'enabled': Guest users may view public clusters.  Login is required to make changes.
 #             An administrator must configure an authentication scheme and ACL rules.
 # 'disabled': Guest users may perform any actions, including edits.  No authentication is required.
+#只读：要求无认证。所有用户还可以看到所有资源，但不允许编辑
+#能做的：用户可以看到公共的集群，注册才能进行修改。一个管理者必须配置认证方案金额ACL规则
+#不能做的：用户可以执行任何操作，包括编辑，要求无认证。
 $conf['auth_system'] = 'readonly';
 
 #
 # The name of the directory in "./templates" which contains the
 # templates that you want to use. Templates are like a skin for the
 # site that can alter its look and feel.
+#包括你想用的模板的模板目录的名字。模板像是可以改变外观和感知的东西
 #
 $conf['template_name'] = "default";
 
 #
 # If you installed gmetad in a directory other than the default
 # make sure you change it here.
+#如你在目录里安装了gmetad而不是默认的，请在这修改它
 #
 
 # Where gmetad stores the rrd archives.
+#gmetad存储rrd档案的地方
 $conf['gmetad_root'] = "@vargmetadir@";
 $conf['rrds'] = "${conf['gmetad_root']}/rrds";
 
 # Where Dwoo (PHP templating engine) store compiled templates
+#Dwoo存储编译模板的地方
 $conf['dwoo_compiled_dir'] = "${conf['gweb_confdir']}/dwoo/compiled";
 $conf['dwoo_cache_dir'] = "${conf['gweb_confdir']}/dwoo/cache";
 
 # Where to store web-based configuration
+存储基于网络的配置的地方
 $conf['views_dir'] = $conf['gweb_confdir'] . '/conf';
 $conf['conf_dir'] = $conf['gweb_confdir'] . '/conf';
 
 # Where to find filter configuration files, if not set filtering
 # will be disabled
 #$conf['filter_dir'] = "${conf['gweb_confdir']}/filters";
-
 # Leave this alone if rrdtool is installed in $conf['gmetad_root'],
 # otherwise, change it if it is installed elsewhere (like /usr/bin)
+#在哪里可以找到过滤器配置文件，如果没有设置过滤器，它将被禁用
+#如果在conf【gmetad——root】中安装了rrdtool，就先不管这个
+#否则如果他被装在其他地方，就修改他
+#
 $conf['rrdtool'] = "/usr/bin/rrdtool";
 
 # Render graphs with rrdtool's --slope-mode option
+#使成为rrdtool的坡度模式选项图
 $conf['rrdtool_slope_mode'] = true;
 
 # If rrdcached is being used, this argument must specify the 
 # socket to use.
+#如果rrdcached正在被使用，这个参数必须指定要使用的插座。
 #
 # ganglia-web only requires, and should use, the low-privilege socket
 # created with the -L option to rrdcached.  gmetad requires, and must use,
 # the fully privileged socket created with the -l option to rrdcached.
+#gWeb只要求，并应使用，使用-l选项创建的低权限插座rrdcached 。
+#gmetad需要，而且必须使用，使用-l选项创建全特权插座rrdcached 。
+#
+
 $conf['rrdcached_socket'] = "";
 
 # Location for modular-graph files.
+#模块化图形文件的地点
 $conf['graphdir']= $conf['gweb_root'] . '/graph.d';
 
 # Display statistical values on RRD graphs; i.e.: average, min, max
+#显示RRD图表统计值;即：平均，最小值，最大值
 $conf['graphreport_stats'] = true;
 $conf['graphreport_stat_items'] = array("now", "min", "avg", "max");
 
 #
 # If you want to grab data from a different ganglia source specify it here.
 # Although, it would be strange to alter the IP since the Round-Robin
-# databases need to be local to be read. 
+# databases need to be local to be read.
+#如果你想抓住从一个不同的节源数据，在这里指定。
+#改变IP很奇怪 ，因为Round-Robin数据库需要是本地的读取
 #
 $conf['ganglia_ip'] = "127.0.0.1";
 $conf['ganglia_port'] = 8652;
@@ -83,18 +105,21 @@ $conf['ganglia_port'] = 8652;
 # to 0 (the default) all graphs will be shown.  This option is
 # helpful if you are viewing the web pages from a browser with a 
 # small pipe.
-#
+#动态图所能显示的最大数目， 如果你把这个值设置为0（默认值），就能显示所有的图片。
+#如果你用一个小管去浏览网站的页面时，这个将很有用。
 $conf['max_graphs'] = 0;
 
 #
 # In the Cluster View this sets the default number of columns used to
 # display the host grid below the summary graphs.
+#在群集察看设置用于显示下面的摘要图主机网格列的默认数量。
 #
 $conf['hostcols'] = 4;
 
 #
 # In the Host View this sets the default number of columns used to
 # display the metric grid below the summary graphs.
+#在主机查看此设置用于显示下面的摘要图度量网格列的默认数量。
 #
 $conf['metriccols'] = 2;
 
@@ -103,22 +128,27 @@ $conf['metriccols'] = 2;
 # hierarchical snapshot (per-cluster instead of per-node) on
 # the meta page this makes more sense. Most people will want this
 # on.
+#打开和关闭网格快照。现在，我们有一个层次的快照（每簇，而不是每个节点）的元页面,这个更有意义。
+#大多数人会希望这个打开。
 #
 $conf['show_meta_snapshot'] = "yes";
 
 #
 # What you want to call the meta level:
 # Suggested values "Grid" or "Campus"
+#你要拨打的元级的东西：建议值是网格和校园
 #
 $conf['meta_designator'] = "Grid";
 
 # 
 # The default refresh frequency on pages.
+#在页面上默认刷新频率
 #
 $conf['default_refresh'] = 300;
 
 #
 # Colors for the CPU report graph
+#CPU报告表的颜色
 #
 $conf['cpu_user_color'] = "3333bb";
 $conf['cpu_nice_color'] = "ffea00";
@@ -132,6 +162,7 @@ $conf['cpu_gnice_color'] = "fff261";
 
 #
 # Colors for the MEMORY report graph
+#内存报告表的颜色
 #
 $conf['mem_used_color'] = "5555cc";
 $conf['mem_shared_color'] = "0000aa";
@@ -142,6 +173,7 @@ $conf['mem_swapped_color'] = "9900CC";
 
 #
 # Colors for the LOAD report graph
+#下载报告表的颜色
 #
 $conf['load_one_color'] = "CCCCCC";
 $conf['proc_run_color'] = "0000FF";
@@ -149,10 +181,12 @@ $conf['cpu_num_color']  = "FF0000";
 $conf['num_nodes_color'] = "00FF00";
 
 # Other colors
+#其他颜色
 $conf['jobstart_color'] = "ff3300";
 
 #
 # Colors for the load ranks.
+#下载等级的颜色
 #
 $conf['load_colors'] = array(
    "100+" => "ff634f",
@@ -165,44 +199,54 @@ $conf['load_colors'] = array(
 
 #
 # Load scaling
+#下载规模
 #
 $conf['load_scale'] = 1.0;
 
 #
 # Default color for single metric graphs
+#单一指标图的默认颜色
 #
 $conf['default_metric_color'] = "555555";
 
 #
-# Default metric 
+# Default metric
+#默认指标
 #
 $conf['default_metric'] = "load_one";
 
 #
 # remove the domainname from the FQDN hostnames in graphs
 # (to help with long hostnames in small charts)
+#从图中的FQDN主机名删除域名
+#（帮助小图表中的长主机名）
 #
 $conf['strip_domainname'] = false;
 
 #
 # hide down hosts from cluster view
+#从集群视图中隐藏主机
 #
 $conf['cluster_hide_down_hosts'] = false;
 
 #
 # Optional summary graphs
 # This function is deprecated. Please configure included reports
-# in the UI or default.json. Please do not use 
+# in the UI or default.json. Please do not use
+#可选汇总图
+#此功能已被弃用。请配置的用户界面或default.json列入报告。请不要使用
 #$conf['optional_graphs'] = array('packet');
 
 # Enable Zoom support on graphs
+#启用图形缩放支持
 $conf['zoom_support'] = true;
 
 
 # 
 # Time ranges
 # Each value is the # of seconds in that range.
-#
+#时间范围
+#在那个范围内，每个值都有多少秒
 $conf['time_ranges'] = array(
    'hour'=>3600,
    '2hr'=>7200,
@@ -212,38 +256,49 @@ $conf['time_ranges'] = array(
    'month'=>2419200,
    'year'=>31449600,
    # Needs to be an entry here to support 'r=job' in the query args to graph.php
+#需要在这里是一个条目，以支持'r=job“的询问参数来graph.php
    'job'=>0
 );
 
 # this key must exist in $conf['time_ranges']
+#这个键必须存在$conf['time_ranges']
 $conf['default_time_range'] = 'hour';
 
 # Graph Engine to use
+#要用的图形引擎
 $conf['graph_engine'] = "rrdtool";
 
 #$conf['graph_engine'] = "graphite";
 $conf['graphite_url_base'] = "http://127.0.0.1/render";
 $conf['graphite_rrd_dir'] = "/opt/graphite/storage/rrd";
 # Don't forget a trailing "." when specifying a prefix.
+#指定一个前缀是，不要忘了结尾的"."
 # Default is empty.
+#默认值是空的
 $conf['graphite_prefix'] = "";
 
 # One of the bottlenecks is that to get individual metrics we query gmetad which
 # returns every single host and all the metrics. If you have lots of hosts and lots of 
 # checks this may be quite heavy so you may want to cache data
+#其中一个瓶颈就是我们查询gmetad获得的各项指标，它返回的每一个主机和所有的指标。
+#如果你有大量用户和大量的检查，这可能是相当重的，所以你可能要缓存数据
+#
 $conf['cachedata'] = 1;
 $conf['cachemodule'] = 'Json';
 $conf['cachefile'] = $conf['conf_dir'] . "/ganglia_metrics.cache";
 $conf['cachetime'] = 1200; // How long to cache the data in seconds
 
 # Different settings for Nagios
+#Nagios的不同的设置
 $conf['nagios_cache_enabled'] = 1;
 $conf['nagios_cache_file'] = $conf['conf_dir'] . "/nagios_ganglia.cache";
 # Cache data for how many seconds
+#缓存数据需要多少秒
 $conf['nagios_cache_time'] = 45;
 
 #
 # Graph sizes
+#图形尺度
 #
 $conf['graph_sizes'] = array(
    'small'=>array(
@@ -294,6 +349,7 @@ $conf['graph_sizes'] = array(
    ),
 
    # this was the default value when no other size was provided.
+#这是当没有提供值时的默认值
    'default'=>array(
      'height'=>100,
      'width'=>400,
@@ -309,15 +365,20 @@ $conf['graph_sizes_keys'] = array_keys( $conf['graph_sizes'] );
 # sets a default graph size separate from the regular default graph size. You
 # can also set this default on a per-view basis by setting 'default_size' in 
 # the view .json file.
+#设置一个默认的图形大小与常规默认图形大小分开。
+#您还可以通过在view.json文件中设置“默认值”来设置在每个视图基础上的默认
 $conf['default_view_graph_size'] = 'medium';
 
 # sets a default graph size for optional graphs separate from the regular
 # default graph size.
+#设置一个默认的图形大小可选图表从常规默认图形大小分开
 $conf['default_optional_graph_size'] = 'medium';
 
 # The API can serve up graphs, but the URLs should be fully qualified.
 # The default value is a hack to serve up the called hostname when
 # possible. It is best to define this manually.
+#该API能容纳图形，但是网址应该是完全合格的。
+#在可能的情况下默认值是一个黑客​​来提供的主机名。最好是手动定义这一点。
 $conf['external_location'] = "http://localhost/ganglia-2";
 
 # In earlier versions of gmetad, hostnames were handled in a case
@@ -325,89 +386,119 @@ $conf['external_location'] = "http://localhost/ganglia-2";
 # If your hostname directories have been renamed to lower case,
 # set this option to 0 to disable backward compatibility.
 # From version 3.2, backwards compatibility will be disabled by default.
+#在早期版本的gmetad的，主机名对大小写的敏感的方式来处理。
+#如果你的主机名的目录已更名为小写，将此选项设置为0禁用向后兼容性。从3.2版本，向后兼容性会默认被禁用。
 # default: true  (for gmetad < 3.2)
 # default: false (for gmetad >= 3.2)
 $conf['case_sensitive_hostnames'] = true;
 
 # The following property controls whether the graphs contained in metric
 # groups are initially displayed or collapsed
+#是否包含在度量标准组图表最初显示或折叠下面的属性控制里
 $conf['metric_groups_initially_collapsed'] = false;
 
 # The following property controls whether opening a metric group is
 # remembered in your sesssion
+#以下属性控制是否打开在会话被记住一个衡量指标组
 $conf['remember_open_metric_groups'] = true;
 
 # Overlay events on graphs. Those are defined by specifying all the events
 # in events.json
+#在图形上叠加事件。这些通过在events.json中指定的所有事件来定义
 $conf['overlay_events'] = true;
 
 # Settings for allowing the Nagios API to be used as an additional
 # event source. Will only be enabled if overlay_nagios_events is true.
+#允许Nagios的API设定要用作一个附加的事件源。如果overlay_nagios_events是真实的才会启用。
 $conf['overlay_nagios_events'] = false;
 $conf['overlay_nagios_base_url'] = 'http://localhost/nagios';
 
 # If you have periodic events that happen often e.g. they will make the
 # graph poorly. By default we exclude events on monthly and yearly graphs
+#如果你有一个经常发生的例如周期性事件，例如他们会做出糟糕的图形。
+#默认情况下，我们在排除每月和每年的图形事件
+#
 $conf['overlay_events_exclude_ranges'] = array("month", "year");
 
 # Overlay events line can be either dashed or solid. Use "solid" for solid
 # lines, anything else (including blanks) means a dashed line.
+# 覆盖事件线既可以用虚线也可以用实线。使用固线“实” ，别的（包括空格）是指虚线
 $conf['overlay_events_line_type'] = "dashed";
 
 # What is the provider use to provide events.
+#提供者用于提供事件
 # Examples: "json", "mdb2"
 $conf['overlay_events_provider'] = "json";
 # Where is the Overlay events file stored
+#覆盖存储事件文件的地方
 $conf['overlay_events_file'] = $conf['conf_dir'] . "/events.json";
 
 # If using MDB2, connection string:
+#如果使用MDB2 ，连接字符串为：
 $conf['overlay_events_dsn'] = "mysql://dbuser:dbpassword@localhost/ganglia";
 
 $conf['overlay_events_color_map_file'] = $conf['conf_dir'] . "/event_color.json";
 
 # For event shading.  Value in hex, 'FF' = 100% opaque.
 # the _shade_ value should be less than _tick_
+＃对于事件的阴影。值以十六进制， 'FF' = 100％不透明。
+＃该_shade_值应小于_tick_
+#
 $conf['overlay_events_tick_alpha']  = '30';
 $conf['overlay_events_shade_alpha'] = '20';
 
 # Colors to use e.g. in graph_colors
+#颜色的使用，例如在graph——colors中
 $conf['graph_colors'] = array("0000A3", "FF3300", "FFCC33", "00CC66", "B88A00", "33FFCC", "809900", "FF3366", "FF33CC", "CC33FF", "CCFF33", "FFFF66", "33CCFF");
 
 # Are heatmaps enabled
+#是否启用hearmaps
 $conf['heatmaps_enabled'] = 1;
 
 # Decorated titles are of the form cluster/host, graph_title/metric, 
 # time range. By setting this attribute to false the clsuter/host and 
 # time range items are excluded.
+#形式集群/主机， graph_title /公制，时间范围的标题。
+#通过这一属性设置为false， 集群/主机和时间范围的项被排除在外。
 $conf['decorated_graph_title'] = true;
 
 # If set to yes, will display stacked graph (aggregated metric across hosts) in cluster view
+#如果设置为yes，将显示集群视图叠加图（跨主机汇总公制）
 $conf['show_stacked_graphs'] = 1;
 
 # If set to false the grid view under the main tab will be displayed only if 
 # the grid name is not "unspecified", or a parent grid has been defined.
 # If set to true the grid view will always be displayed even when only a
 # single cluster has been defined.
+#如果设置为false ，主选项卡下的网格视图将只显示如果网格名称不是“未指定” ，
+#或父母电网已被定义。如果设置为true ，即使只有一个集群被定义网格视图将始终显示。
 $conf['always_display_grid_view'] = true;
 
 # In the host view, should we include/exclude optional cluster graphs?
+#在主机看来，我们应该包含/排除可选丛图表？
 $conf['optional_cluster_graphs_for_host_view'] = true;
 
 # Color for the timeshift line
+#事件移动线的颜色
 $conf['timeshift_line_color'] = "#FFD17F";
 
 # Color for trend line
+#趋势线的颜色
 $conf['trend_line_color'] = "#53E2FF";
 
 # Control whether arguments can be passed into php reports
+#控制参数是否可以传递到PHP报告
 $conf['enable_pass_in_arguments_to_optional_graphs'] = false;
 
-# Control wether present graphs with 'bytes', 'Bytes', 'bytes/s', 'Bytes/s', 'kB', 'MB', 'GB', 'bits', 'Bits', 'bits/s', 'Bits/s'
+# Control whether present graphs with 'bytes', 'Bytes', 'bytes/s', 'Bytes/s', 'kB', 'MB', 'GB', 'bits', 'Bits', 'bits/s', 'Bits/s'
 # as vertical label have their base value set to 1024
+#控制是否存在图与“字节”，“字节”，“字节/秒'，'字节/秒'，' KB '，' MB '，' GB '，'位'，'位'，'比特/秒” “比特/秒”
+#作为垂直标签有自己的基值设置为1024
 $conf['rrdtool_base_1024'] = false;
 
 # Metrics autocompletion picker. This loads all metrics asynchronously
 # during search, rather than pre-loading at page load.
+＃度量自动完成选择器。这个搜索过程中异步加载所有的指标，而不是在页面加载预加载。
 $conf['picker_autocomplete'] = false;
 
 # Allow views to be generated on the fly by passing the json object
@@ -415,12 +506,18 @@ $conf['picker_autocomplete'] = false;
 # vulnerabilities, passing a complex json object on a url may be an
 # attack vector for malicious users so ad-hoc-views are disabled by
 # default.
+#要通过传递JSON带“特设视图'参数的对象允许在飞行中产生的看法。
+#虽然没有已知的漏洞，但是传递在网址上的一个复杂的JSON对象可能是恶意的用户，
+#这样临时的视图默认情况下禁用的攻击向量。
 $conf['ad-hoc-views'] = false;
 
 # Configure memcache server(s) for any memcached capabilities.
+#配置内存缓存服务器（县）任何内存缓存功能。
+#
 $conf['memcached_servers'] = array ( '127.0.0.1:11211' );
 
 # Choose between tabular or calendar views
+#在表格和日历之间进行选择
 $conf['display_events_using_calendar'] = false;
 
 # Organize views using a tree. A new attribute "parent" has been
@@ -428,21 +525,30 @@ $conf['display_events_using_calendar'] = false;
 # the path from the root node to its desired folder, e.g. 
 # "Exchange Servers/Throughtput". Individual path entries are
 # separated by a forward slash.
+#组织使用树视图。一个新的属性“父”已被添加到用于指定其需要的文件夹，
+#例如从根节点的路径的图的JSON定义“ Exchange服务器/吞吐率” 。
+#个别路径项用斜杠分隔。
 $conf['display_views_using_tree'] = false;
 
 # Array of pathnames that define view tree nodes that should be opened
 # when the tree is first created in a browser session. Path entries are 
 # separated using "--"
 #$conf['view_tree_nodes_initially_open'] = array();
+#定义当在浏览器会话第一次创建树应该打开视图树节点路径名的数组。
+#路径条目是分开使用“ - ”
 
 # Gmetad will send back <EXTRA_DATA> information that is not utilized
 # in many code paths. This will pre-emptively strip out the tags in 
 # those code paths to save time during XML parsing.
 $conf['strip_extra'] = true;
+#Gmetad将发回未在许多代码路径使用< EXTRA_DATA >信息。
+#这将先发制人地剔除这些代码路径标签XML解析过程中从而节省时间。
 
 # By default we'll just download Jquery, Cubism and D3 required libraries from a CDN that offers
 # that for free. If that is undesirable you can override this in conf.php by putting 
 # downloading the asset and putting relative path or absolute paths to it e.g.
+#默认情况下我们只下载CDN提供的免费下载的Jquery ，立体主义和D3需要的库。
+#如果这是不可取的，你可以通过将下载的资产，并把相对路径或绝对路径，例如它在conf.php覆盖在此
 #$conf['cubism_js_path'] = "js/cubism.v1.min.js";
 $conf['jquery_js_path'] = "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js";
 $conf['jquerymobile_js_path'] = "https://cdnjs.cloudflare.com/ajax/libs/jquery-mobile/1.4.5/jquery.mobile.min.js";
@@ -457,6 +563,8 @@ $conf['jstree_css_path'] = "https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/
 $conf['jquery_flot_base_path'] = "https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot";
 
 # Enable Cubism integration http://square.github.io/cubism/
+#启用立体主义融合
+#
 $conf['cubism_enabled'] = true;
 $conf['cubism_default_height'] = 30;
 $conf['cubism_default_step'] = 15;

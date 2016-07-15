@@ -12,6 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
+ *这个源文件是受捆绑与此包中的文件LICENSE.TXT新的BSD许可证
+ *它也可以通过这个网址在全球范围内，网址
+ *http ： //framework.zend.com/license/new-bsd
+ *如果您没有收到该许可证的副本，并无法通过在全球范围内的Web获得，请发送电子邮件至
+ *license@zend.com所以我们马上就可以送你一份。
+ *
  * @category   Zend
  * @package    Zend_Acl
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
@@ -56,10 +62,13 @@ require_once 'Zend/Acl/Resource.php';
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
+    /*
+     版权版权所有（ C）2005-2010 Zend科技美国公司（ http://www.zend.com ）许可证http://framework.zend.com/license/new-bsd新BSD授权
+     */
 class Zend_Acl
 {
     /**
-     * Rule type: allow
+     * Rule type: allow   规则类型：allow
      */
     const TYPE_ALLOW = 'TYPE_ALLOW';
 
@@ -69,7 +78,7 @@ class Zend_Acl
     const TYPE_DENY  = 'TYPE_DENY';
 
     /**
-     * Rule operation: add
+     * Rule operation: add  规则操作：加
      */
     const OP_ADD = 'OP_ADD';
 
@@ -79,14 +88,14 @@ class Zend_Acl
     const OP_REMOVE = 'OP_REMOVE';
 
     /**
-     * Role registry
+     * Role registry  注册表中的角色
      *
      * @var Zend_Acl_Role_Registry
      */
     protected $_roleRegistry = null;
 
     /**
-     * Resource tree
+     * Resource tree  资源🌲
      *
      * @var array
      */
@@ -109,7 +118,7 @@ class Zend_Acl
 
     /**
      * ACL rules; whitelist (deny everything to all) by default
-     *
+     *Acl规则：默认的白名单（拒绝一切）
      * @var array
      */
     protected $_rules = array(
@@ -140,6 +149,7 @@ class Zend_Acl
      * will have the least priority, and the last parent added will have the
      * highest priority.
      *
+     *加上带有独特的注册表中的标识符的作用。在$家长参数可以是一个参考，还是对于字符串标识，现有的注册表中的一个角色，或者$父母可能为这些数组传递 - 混合字符串标识符和对象是确定的 - 来表示角色从中新添加的角色将直接继承。为了解决潜在的歧义与冲突的规则从不同的父母那里继承，最近添加的家长优先于以前添加的父母。换句话说，第一个亲本中加入将具有至少优先权，并最后添加的父将具有最高优先级。
      * @param  Zend_Acl_Role_Interface              $role
      * @param  Zend_Acl_Role_Interface|string|array $parents
      * @uses   Zend_Acl_Role_Registry::add()
@@ -164,9 +174,9 @@ class Zend_Acl
 
     /**
      * Returns the identified Role
-     *
+     *返回标志作用
      * The $role parameter can either be a Role or Role identifier.
-     *
+     *在$角色参数可以是角色或角色标识符。
      * @param  Zend_Acl_Role_Interface|string $role
      * @uses   Zend_Acl_Role_Registry::get()
      * @return Zend_Acl_Role_Interface
@@ -178,9 +188,9 @@ class Zend_Acl
 
     /**
      * Returns true if and only if the Role exists in the registry
-     *
+     *当且仅当角色在注册表中存在是返回true
      * The $role parameter can either be a Role or a Role identifier.
-     *
+     *本角色参数可以是角色或角色标识符。
      * @param  Zend_Acl_Role_Interface|string $role
      * @uses   Zend_Acl_Role_Registry::has()
      * @return boolean
@@ -192,13 +202,15 @@ class Zend_Acl
 
     /**
      * Returns true if and only if $role inherits from $inherit
-     *
+     *当且仅当role经过继承获得时返回true
      * Both parameters may be either a Role or a Role identifier. If
      * $onlyParents is true, then $role must inherit directly from
      * $inherit in order to return true. By default, this method looks
      * through the entire inheritance DAG to determine whether $role
      * inherits from $inherit through its ancestor Roles.
-     *
+     *这两个参数可以是角色或角色标识符。如果onlyParents是真的，那么角色必须直接从继承
+     *返回true继承。默认情况下，这个方法看起来在整个继承DAG来决定角色是否继承通过其
+     *祖先角色继承。
      * @param  Zend_Acl_Role_Interface|string $role
      * @param  Zend_Acl_Role_Interface|string $inherit
      * @param  boolean                        $onlyParents
@@ -212,9 +224,9 @@ class Zend_Acl
 
     /**
      * Removes the Role from the registry
-     *
+     *把角色从注册表中移除
      * The $role parameter can either be a Role or a Role identifier.
-     *
+     *角色参数可以是角色或角色标识符。
      * @param  Zend_Acl_Role_Interface|string $role
      * @uses   Zend_Acl_Role_Registry::remove()
      * @return Zend_Acl Provides a fluent interface
@@ -249,7 +261,7 @@ class Zend_Acl
 
     /**
      * Removes all Roles from the registry
-     *
+     *把角色从注册表中移除
      * @uses   Zend_Acl_Role_Registry::removeAll()
      * @return Zend_Acl Provides a fluent interface
      */
@@ -271,9 +283,10 @@ class Zend_Acl
 
     /**
      * Adds a Resource having an identifier unique to the ACL
-     *
+     *添加有独特的ACL的标识符的资源
      * The $parent parameter may be a reference to, or the string identifier for,
      * the existing Resource from which the newly added Resource will inherit.
+     *父参数可能是一个参考数，或字符串标识符，从新添加的资源中现有的资源将继承。
      *
      * @param  Zend_Acl_Resource_Interface|string $resource
      * @param  Zend_Acl_Resource_Interface|string $parent
@@ -326,11 +339,12 @@ class Zend_Acl
 
     /**
      * Adds a Resource having an identifier unique to the ACL
-     *
+     *添加有独特的ACL的标识符的资源
      * The $parent parameter may be a reference to, or the string identifier for,
      * the existing Resource from which the newly added Resource will inherit.
-     *
-     * @deprecated in version 1.9.1 and will be available till 2.0.  New code
+     *父参数可能是一个参考数，或字符串标识符，从新添加的资源中现有的资源将继承
+     * @deprecated in version 1.9.1 and will be available till 2.0.  New 
+     *code
      *             should use addResource() instead.
      *
      * @param  Zend_Acl_Resource_Interface        $resource
@@ -345,9 +359,10 @@ class Zend_Acl
 
     /**
      * Returns the identified Resource
-     *
-     * The $resource parameter can either be a Resource or a Resource identifier.
-     *
+     *返回标识符资源
+     * The $resource parameter can either be a Resource or a Resource 
+     *identifier.
+     *父参数可能是一个参考数，或字符串标识符，
      * @param  Zend_Acl_Resource_Interface|string $resource
      * @throws Zend_Acl_Exception
      * @return Zend_Acl_Resource_Interface
@@ -370,9 +385,10 @@ class Zend_Acl
 
     /**
      * Returns true if and only if the Resource exists in the ACL
-     *
-     * The $resource parameter can either be a Resource or a Resource identifier.
-     *
+     *当且仅当资源存在ACL是返回true
+     * The $resource parameter can either be a Resource or a Resource
+     *identifier.
+     *资源参数可以是一个资源或资源标识符。
      * @param  Zend_Acl_Resource_Interface|string $resource
      * @return boolean
      */
@@ -389,13 +405,15 @@ class Zend_Acl
 
     /**
      * Returns true if and only if $resource inherits from $inherit
-     *
+     *当且仅当资源继承继承时返回true
      * Both parameters may be either a Resource or a Resource identifier. If
      * $onlyParent is true, then $resource must inherit directly from
      * $inherit in order to return true. By default, this method looks
      * through the entire inheritance tree to determine whether $resource
      * inherits from $inherit through its ancestor Resources.
-     *
+     *这两个参数可以是一个资源或资源标识符。
+     *如果onlyParent是真实的，那么资源必须直接继承才能返回true
+     *默认情况下，这个方法看起来在整个继承树，以确定通过其祖先资源资源是否被继承。
      * @param  Zend_Acl_Resource_Interface|string $resource
      * @param  Zend_Acl_Resource_Interface|string $inherit
      * @param  boolean                            $onlyParent
@@ -435,9 +453,10 @@ class Zend_Acl
 
     /**
      * Removes a Resource and all of its children
-     *
-     * The $resource parameter can either be a Resource or a Resource identifier.
-     *
+     *删除资源及其所有孩子
+     * The $resource parameter can either be a Resource or a Resource 
+     *identifier.
+     *资源参数可以是一个资源或资源标识符。
      * @param  Zend_Acl_Resource_Interface|string $resource
      * @throws Zend_Acl_Exception
      * @return Zend_Acl Provides a fluent interface
@@ -475,7 +494,7 @@ class Zend_Acl
 
     /**
      * Removes all Resources
-     *
+     *移除所有的资源
      * @return Zend_Acl Provides a fluent interface
      */
     public function removeAll()
@@ -495,7 +514,7 @@ class Zend_Acl
 
     /**
      * Adds an "allow" rule to the ACL
-     *
+     *给ACL添加一个allow规则
      * @param  Zend_Acl_Role_Interface|string|array     $roles
      * @param  Zend_Acl_Resource_Interface|string|array $resources
      * @param  string|array                             $privileges
@@ -510,7 +529,7 @@ class Zend_Acl
 
     /**
      * Adds a "deny" rule to the ACL
-     *
+     *给ACL添加一个deny规则
      * @param  Zend_Acl_Role_Interface|string|array     $roles
      * @param  Zend_Acl_Resource_Interface|string|array $resources
      * @param  string|array                             $privileges
@@ -525,7 +544,7 @@ class Zend_Acl
 
     /**
      * Removes "allow" permissions from the ACL
-     *
+     *从ACL删除允许权限
      * @param  Zend_Acl_Role_Interface|string|array     $roles
      * @param  Zend_Acl_Resource_Interface|string|array $resources
      * @param  string|array                             $privileges
@@ -539,7 +558,7 @@ class Zend_Acl
 
     /**
      * Removes "deny" restrictions from the ACL
-     *
+     *删除ADCL的拒绝限制
      * @param  Zend_Acl_Role_Interface|string|array     $roles
      * @param  Zend_Acl_Resource_Interface|string|array $resources
      * @param  string|array                             $privileges
@@ -553,20 +572,21 @@ class Zend_Acl
 
     /**
      * Performs operations on ACL rules
-     *
+     *执行ACL操作规则
      * The $operation parameter may be either OP_ADD or OP_REMOVE, depending on whether the
      * user wants to add or remove a rule, respectively:
-     *
+     *操作参数可以使OP_ADD或者OP_REMOVE，取决于使用者是想添加还是删除
      * OP_ADD specifics:
      *
      *      A rule is added that would allow one or more Roles access to [certain $privileges
      *      upon] the specified Resource(s).
-     *
+     *      一个规则被添加会允许一个或者更多的角色接触[某些特权]明确的资源
      * OP_REMOVE specifics:
      *
      *      The rule is removed only in the context of the given Roles, Resources, and privileges.
      *      Existing rules to which the remove operation does not apply would remain in the
      *      ACL.
+     *
      *
      * The $type parameter may be either TYPE_ALLOW or TYPE_DENY, depending on whether the
      * rule is intended to allow or deny permission, respectively.

@@ -6,10 +6,11 @@ $data->assign("self", "$self");
 
 # Not as complicated as before. No depth-first-search, and
 # we only show our immediate children.
-
+#比以前简单些了，没有深度优先搜索
 # Publish past grids in our stack.
 $ancestors = $gridstack;
 # Take ourself off the end of the stack.
+    #把我们从堆栈的末尾取出来
 array_pop($ancestors);
 
 if (count($ancestors)) {

@@ -3,7 +3,7 @@ include_once("./eval_conf.php");
 include_once("./functions.php");
 include_once("./global.php");
 include_once("./dwoo/dwooAutoload.php");
-
+    #视图的内容，视图的项目，名字，数据，名单
 if (! checkAccess(GangliaAcl::ALL_VIEWS, GangliaAcl::VIEW, $conf))
   die("You do not have access to view views.");
 

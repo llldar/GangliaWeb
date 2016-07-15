@@ -15,7 +15,9 @@
 # Originally by Federico Sacerdoti <fds@sdsc.edu>
 #
 # Host is specified in get_context.php.
-
+    #显示由主机指定的节点信息，
+    #把数据简单处理一下，美化表格
+    #涉及到  软件， 硬件， 磁盘  的指标
 if (empty($hostname)) {
    print "<h1>Missing a Node Name</h1>";
    return;
@@ -47,6 +49,7 @@ if(isset($hostattrs['ip'])) {
 
 # 加载我们这个主机节点所需要的参数
 # The metrics we need for this node.
+    #这个节点我们需要的指标
 $mem_total_gb = $metrics['mem_total']['VAL']/1048576;
 $load_one=$metrics['load_one']['VAL'];
 $load_five=$metrics['load_five']['VAL'];
@@ -57,6 +60,7 @@ $cpu_idle=$metrics['cpu_idle']['VAL'];
 $cpu_num=$metrics['cpu_num']['VAL'];
 # Cannot be zero, since we use it as a divisor.
 # 不可以为0 因为要做除法
+#除数不能为零
 if (!$cpu_num) { $cpu_num=1; }
 $cpu_speed=round($metrics['cpu_speed']['VAL']/1000, 2);
 $disk_total=$metrics['disk_total']['VAL'];
@@ -65,6 +69,7 @@ $disk_use = $disk_total - $disk_free;
 $disk_units=$metrics['disk_total']['UNITS'];
 $part_max_used=$metrics['part_max_used']['VAL'];
 # Disk metrics are newer (as of 2.5.0), so we check more carefully.
+    #更仔细检查磁盘指标
 $disk = ($disk_total) ? "Using $disk_use of $disk_total $disk_units" : "Unknown";
 $part_max = ($part_max_used) ? "$part_max_used% used." : "Unknown";
 
@@ -82,7 +87,7 @@ if ($age > 3600) {
 }
 
 # The these hardware units should be more flexible.
-# 
+#硬件设备更复杂
 $s = ($cpu_num>1) ? "s" : "";
 $data->assign("s",$s);
 $data->assign("cpu", sprintf("%s x %.2f GHz", $cpu_num, $cpu_speed));
@@ -98,6 +103,7 @@ $data->assign("cpu_idle",$cpu_idle);
 
 # Choose a load color from a unix load value.
 # 选择一个加载颜色
+#加载index的函数
 function loadindex($load) {
    global $cpu_num;
    # Highest color comes at a load of loadscalar*10.
@@ -126,7 +132,8 @@ $data->assign("sys",percentindex($cpu_system));
 $data->assign("idle",percentindex(100 - $cpu_idle));
 
 # Software metrics
-# 软件信息
+# 软件参数信息
+# Software metrics 软件指标
 $os_name=$metrics['os_name']['VAL'];
 $os_release=$metrics['os_release']['VAL'];
 $machine_type=$metrics['machine_type']['VAL'];
@@ -135,7 +142,9 @@ $booted=date("F j, Y, g:i a", $boottime);
 $uptime=uptime($cluster['LOCALTIME'] - $metrics['boottime']['VAL']);
 
 # Turning into MBs. A MB is 1024 bytes.
+
 # 空间信息转换成MB
+#把字节转为Mb
 $swap_free=$metrics['swap_free']['VAL']/1024.0;
 $swap_total=sprintf("%.1f", $metrics['swap_total']['VAL']/1024.0);
 $swap_used=sprintf("%.1f", $swap_total - $swap_free);
