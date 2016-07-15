@@ -1,6 +1,22 @@
+#总结：
+//让指标cols菜单
+//得到一个可选报告
+//把缩放类添加到图像以便图像进行缩放
+//找出正确报告已获得可选报告
+//合并阵列
+//删除重复项
+//得到指标组
+//更新正确打开指标组的定义
+//指标名字排序
+//设置基于显示的图片大小的主机变焦类
+//当地时间所以运行时间将在显示为0
+
+
+
 <?php
 include_once("./global.php");
 
+    #让指标cols菜单
 function make_metric_cols_menu($conf_metriccols) {
   $metric_cols_menu = 
     "<select name=\"mc\" OnChange=\"ganglia_form.submit();\">\n";
@@ -37,7 +53,7 @@ function dump_var($var, $varId) {
   var_dump($var);
   error_log($varId . " = ". ob_get_clean());
 }
-
+    #得到一个可选的报告
 function getOptionalReports($hostname,
 			    $clustername,
 			    $graph_args) {
@@ -51,6 +67,7 @@ function getOptionalReports($hostname,
 
   // If we want zoomable support on graphs we need to add correct zoomable 
   // class to every image
+//    如果我们想在图形上可缩放的支持，我们需要把正确的缩放类添加到每个图像
   $additional_cluster_img_html_args = "";
   if ( isset($conf['zoom_support']) && $conf['zoom_support'] === true )
     $additional_cluster_img_html_args = "class=cluster_zoomable";
@@ -59,6 +76,8 @@ function getOptionalReports($hostname,
   // Let's find out what optional reports are included
   // First we find out what the default (site-wide) reports are then look
   // for host specific included or excluded reports
+//    让我们来看看有什么可选的报告列入。
+//    首先，我们找出默认的（站点范围）报告然后寻找特定的主机包含或排除报告
   ///////////////////////////////////////////////////////////////////////////
   $default_reports = array("included_reports" => array(), 
 			   "excluded_reports" => array());
@@ -94,6 +113,7 @@ function getOptionalReports($hostname,
       json_decode(file_get_contents($host_file), TRUE));
   } else {
     // If there is no host file, look for a default cluster file
+//      如果没有主机文件，寻找一个默认的集群文件
     $cluster_file = $conf['conf_dir'] . "/cluster_" . $clustername . ".json";
     if ( is_file($cluster_file) ) {
       $override_reports = array_merge(
@@ -103,7 +123,8 @@ function getOptionalReports($hostname,
   }
 
   // Merge arrays
-  $reports["included_reports"] = array_merge( 
+//    合并阵列
+  $reports["included_reports"] = array_merge(
     $default_reports["included_reports"], 
     $cluster_override_reports["included_reports"], 
     $override_reports["included_reports"]);
@@ -114,6 +135,7 @@ function getOptionalReports($hostname,
     $override_reports["excluded_reports"]);
 
   // Remove duplicates
+//    删除重复项
   $reports["included_reports"] = array_unique($reports["included_reports"]);
   $reports["excluded_reports"] = array_unique($reports["excluded_reports"]);
 
@@ -150,7 +172,7 @@ function getOptionalReports($hostname,
   } // foreach
   return $optional_reports;
 }
-
+//得到指标组
 function getMetricGroups($metrics,
 			 $always_timestamp,
 			 $always_constant,
@@ -177,7 +199,8 @@ function getMetricGroups($metrics,
   }
 
   // Updated definition of currently open metric groups
-  $new_open_groups = ""; 
+//    更新正确打开指标组的定义
+  $new_open_groups = "";
   $host_metrics = 0;
   $metrics_group_data = array();
 
@@ -228,6 +251,7 @@ function getMetricGroups($metrics,
 	$metric_array = sort_metric_group_metrics($group, $metric_array);
       } else {
 	// Sort by metric_name
+//          指标名字排序
 	asort($metric_array);
       }
 
@@ -269,6 +293,7 @@ getHostOverViewData($hostname,
                     $data);
 
 # No reason to go on if this node is down.
+//    如果这个节点是向下的，无理由继续
 if ($hosts_down) {
   $dwoo->output($tpl, $data);
   return;
@@ -283,6 +308,7 @@ $size = isset($clustergraphsize) ? $clustergraphsize : 'default';
 $size = ($size == 'medium') ? 'default' : $size; 
 
 // set host zoom class based on the size of the graph shown
+//    设置基于显示的图片大小的主机变焦类
 $additional_host_img_css_classes = "";
 if ( isset($conf['zoom_support']) && $conf['zoom_support'] === true )
   $additional_host_img_css_classes = "host_${size}_zoomable";
@@ -292,6 +318,7 @@ $data->assign("additional_host_img_css_classes",
 
 # in case this is not defined, set to LOCALTIME so uptime will be 0 
 # in the display
+//    万一这个没定义，当地时间所以运行时间将在显示为0
 if (!isset($metrics['boottime']['VAL'])) { 
   $metrics['boottime']['VAL'] = $cluster['LOCALTIME'];
 }

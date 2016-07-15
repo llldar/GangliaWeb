@@ -14,9 +14,11 @@ $source_names = array_keys($grid);
 # display for control room mode.  This allows a dedicated host to
 # eventually cycle through all the graphs w/o scrolling the mouse.  A bunch
 # of these stations could monitor a large grid.
-#
+# 建立一系列的集群名字，随机抽取一部分去显示控制模式，
+# 这使得专用主机最终通过所有的滚动鼠标的图表周期W / O
+# 大量的这样的集群回去监控网格
 # For the standard meta view still display all the hosts.
-
+# 标准的元视图将会显示在所有的主机上
 if ( $context == "control" ) {
        srand((double)microtime()*1000000);
        shuffle($source_names);
@@ -63,6 +65,7 @@ if ($sort == "descending") {
 $sources = array();
 
 # Display the sources. The first is ourself, the rest are our children.
+    #显示资源，第一个是自己，剩下的是孩子
 foreach ( $sorted_sources as $source => $val )
    {
       # XXX: SORT HACK to keep $self first; see above
@@ -71,6 +74,7 @@ foreach ( $sorted_sources as $source => $val )
       }
 
       # Make sure the source is permitted by the filters, if any
+       #如果可以的话，确保源是由过滤器允许的，
       if(!filter_permit($source))
          continue;
 
@@ -80,9 +84,11 @@ foreach ( $sorted_sources as $source => $val )
          {
             $localtime = $grid[$source]['LOCALTIME'];
             # Is this the our own grid?
+             #判断是不是我们自己的网格
             if ($source==$self)
                {
                   # Negative control room values means dont display grid summary.
+                   # 负值不显示网格概要
                   if ($controlroom < 0) continue;
                   $num_sources = count($sorted_sources) - 1;
                   $name = "$self ${conf['meta_designator']} ($num_sources sources)";
@@ -92,6 +98,7 @@ foreach ( $sorted_sources as $source => $val )
             else
                {
                   # Set grid context.
+                   # 设置网格内容
                   $name = "$source ${conf['meta_designator']}";
                   $graph_url = "G=$sourceurl&amp;$get_metric_string&amp;st=$localtime";
                   $authority = $grid[$source]['AUTHORITY'];
@@ -103,6 +110,7 @@ foreach ( $sorted_sources as $source => $val )
       else
          {
             # Set cluster context.
+             #设置集群内容
             $name = $source;
             $localtime = $grid[$source]['LOCALTIME'];
             $graph_url = "c=$sourceurl&amp;$get_metric_string&amp;st=$localtime";
@@ -129,6 +137,7 @@ foreach ( $sorted_sources as $source => $val )
 
       # Initialize some variables for the $sources array to be past to the template since private sources
       # may not have these defined
+       #初始化资源组使成为模板，因为私有资源可能没有定义
       $sources[$source]["alt_view"] = "";
       $sources[$source]["cluster_load"] = "";
       $sources[$source]["cluster_util"] = "";
@@ -143,6 +152,7 @@ foreach ( $sorted_sources as $source => $val )
 
       # I dont like this either, but we need to have private clusters because some
       # users are skittish about publishing the load info.
+       #我们需要有专用集群，因为有些用户是顽皮的，想发布负载信息。
       if(checkAccess($source, GangliaAcl::VIEW, $conf)) 
          {
             $sources[$source]["alt_view"] = "<FONT SIZE=\"-2\">$alt_url</FONT>";
@@ -177,6 +187,7 @@ $data->assign("sources", $sources);
 $snap_rows = array();
 
 # Show load images.
+    #显示加载图片
 if ($conf['show_meta_snapshot']=="yes") {
    $data->assign("show_snapshot", 1);
    $data->assign("self", "$self ${conf['meta_designator']}");
@@ -197,6 +208,7 @@ if ($conf['show_meta_snapshot']=="yes") {
       $Images[]=$image;
    }
    # Add private cluster pictures to the end.
+    #给结尾添加私有集群图片
    if (isset($Private) and is_array($Private)) {
       foreach ($Private as $c=>$image) {
          $names[]=$c;
@@ -206,6 +218,7 @@ if ($conf['show_meta_snapshot']=="yes") {
 
    # All this fancyness is to get the Cluster names
    # above the image. Not easy with template blocks.
+    #所有的fancyness将得到图表上方的集群名字，这对模板块来说并不容易
    $cols=5;
    $i = 0;
    $count=count($names);
